@@ -1,5 +1,7 @@
 import json
 import requests
+from io import BytesIO
+from PIL import Image
 
 def fetchImagesData(char, tags = "solo", count = 100, site = "safebooru"):
 	if tags != "":
@@ -30,5 +32,15 @@ def fetchImagesData(char, tags = "solo", count = 100, site = "safebooru"):
 			imgDict["url"] = "https://gelbooru.org/images/" + img["directory"] + "/" + img["image"] + "?" + str(img["id"]);
 		imageData.append(imgDict)
 
-	print("code executed successfully")
 	return imageData
+
+def fetchImage(url):
+	if type(url) is str:
+		r = requests.get(url)
+	elif type(url) is dict:
+		r = requests.get(url["url"])
+	else:
+		raise TypeError
+
+	img = Image.open(BytesIO(r.content))
+	return img
