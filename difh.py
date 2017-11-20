@@ -3,6 +3,22 @@ import requests
 from io import BytesIO
 from PIL import Image
 
+def cutImage(im, ratio):
+	if ratio < im.width / im.height:
+		return im.crop((
+			(im.width - im.height * ratio) / 2,
+			0, 
+			(im.width + im.height * ratio) / 2,
+			im.height
+		))
+	else:
+		return im.crop((
+			0,
+			(im.height - im.width / ratio) / 2,
+			im.width,
+			(im.height + im.width / ratio) / 2
+		))
+
 def fetchImagesData(char, tags = "solo", count = 100, site = "safebooru"):
 	if tags != "":
 		tags = '+' + tags
