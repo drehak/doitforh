@@ -1,7 +1,7 @@
 import json
 import requests
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ImageChops
 
 def cutImage(im, ratio):
 	if ratio < im.width / im.height:
@@ -60,3 +60,31 @@ def fetchImage(url):
 
 	img = Image.open(BytesIO(r.content))
 	return img
+
+# each hole is a tuple in the format (left bound, upper bound, width, height)
+def fillTemplate(holes, images, template, resample = Image.BILINEAR):
+	if (len(holes) != len(images)):
+		raise Exception("Arrays of holes and images must be the same length.")
+
+	# sort both lists by w/h ratio (ascending)
+	holes.sort(key = lambda x: x[2] / x[3])
+	images.sort(key = lambda x: x.width / x.height)
+	
+	for i in range(len(holes)):
+		print(holes[i])
+		x, y, w, h = holes[i]
+		cutout = cutImage(images[i], w / h).resize((w, h), resample = resample)
+		bottomLayer = Image.new("RGBA", (template.width, template.height), (0, 0, 0, 0))
+		bottomLayer.paste(cutout, (x, y, x+w, y+h))
+		template = Image.alpha_composite(bottomLayer, template)
+
+	return template
+
+# demo for two images
+count = 2
+imgs = fetchImagesData("tatara_kogasa", count = count)
+for i in range(count):
+    imgs[i] = fetchImage(imgs[i]["url"])
+tmpl = Image.open("template.png")
+result = fillTemplate([[12, 681, 163, 167], [1099, 10, 290, 188]], imgs, tmpl)
+result.show()
