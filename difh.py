@@ -71,7 +71,7 @@ def fillTemplate(holes, images, template, resample = Image.BILINEAR):
 	images.sort(key = lambda x: x.width / x.height)
 	
 	for i in range(len(holes)):
-		print(holes[i])
+		print(holes[i], images[i])
 		x, y, w, h = holes[i]
 		cutout = cutImage(images[i], w / h).resize((w, h), resample = resample)
 		bottomLayer = Image.new("RGBA", (template.width, template.height), (0, 0, 0, 0))
@@ -80,11 +80,25 @@ def fillTemplate(holes, images, template, resample = Image.BILINEAR):
 
 	return template
 
-# demo for two images
-count = 2
+# demo
+holes = [
+	[12, 681, 163, 167],
+	[210, 433, 246, 246],
+	[212, 26, 319, 172],
+	[379, 282, 86, 105],
+	[455, 226, 62, 68],
+	[483, 408, 217, 136],
+	[555, 547, 462, 441],
+	[895, 229, 230, 138],
+	[1068, 262, 284, 336],
+	[1099, 10, 290, 188],
+	[1151, 685, 157, 232],
+]
+count = len(holes)
+
 imgs = fetchImagesData("tatara_kogasa", count = count)
 for i in range(count):
     imgs[i] = fetchImage(imgs[i]["url"])
 tmpl = Image.open("template.png")
-result = fillTemplate([[12, 681, 163, 167], [1099, 10, 290, 188]], imgs, tmpl)
+result = fillTemplate(holes, imgs, tmpl)
 result.show()
