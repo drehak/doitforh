@@ -1,9 +1,17 @@
 import json
 import requests
+import random
 from io import BytesIO
 from PIL import Image, ImageChops
 
-def cutImage(im, ratio):
+def cutImage(im, width, height, resample = Image.BILINEAR):
+	ratio = width / height
+
+	if (im.width < width):
+		im = im.resize((width, int(im.height * width / im.width) + 1), resample = resample)
+	if (im.height < height):
+		im = im.resize((int(im.width * width / im.height) + 1, height), resample = resample)
+
 	if ratio < im.width / im.height:
 		return im.crop((
 			(im.width - im.height * ratio) / 2,
@@ -71,9 +79,8 @@ def fillTemplate(holes, images, template, resample = Image.BILINEAR):
 	images.sort(key = lambda x: x.width / x.height)
 	
 	for i in range(len(holes)):
-		print(holes[i], images[i])
 		x, y, w, h = holes[i]
-		cutout = cutImage(images[i], w / h).resize((w, h), resample = resample)
+		cutout = cutImage(images[i], w, h).resize((w, h), resample = resample)
 		bottomLayer = Image.new("RGBA", (template.width, template.height), (0, 0, 0, 0))
 		bottomLayer.paste(cutout, (x, y, x+w, y+h))
 		template = Image.alpha_composite(bottomLayer, template)
@@ -83,7 +90,7 @@ def fillTemplate(holes, images, template, resample = Image.BILINEAR):
 # demo
 holes = [
 	[12, 681, 163, 167],
-	[210, 433, 246, 246],
+	[210, 433, 346, 246],
 	[212, 26, 319, 172],
 	[379, 282, 86, 105],
 	[455, 226, 62, 68],
@@ -94,11 +101,13 @@ holes = [
 	[1099, 10, 290, 188],
 	[1151, 685, 157, 232],
 ]
-count = len(holes)
 
-imgs = fetchImagesData("tatara_kogasa", count = count)
-for i in range(count):
-    imgs[i] = fetchImage(imgs[i]["url"])
+imgData = fetchImagesData("tatara_kogasa", count = 100)
+imgs = []
+while len(imgs) < len(holes):
+	temp = fetchImage(random.choice(imgData))
+	imgs.append(temp)
+
 tmpl = Image.open("template.png")
 result = fillTemplate(holes, imgs, tmpl)
 result.show()
