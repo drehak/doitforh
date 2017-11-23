@@ -2,6 +2,7 @@ import json
 import requests
 import random
 from io import BytesIO
+from pathlib import Path
 from PIL import Image, ImageChops
 
 def cutImage(im, width, height, resample = Image.BILINEAR):
@@ -22,9 +23,9 @@ def cutImage(im, width, height, resample = Image.BILINEAR):
 	else:
 		return im.crop((
 			0,
-			(im.height - im.width / ratio) / 2,
+			(im.height - im.width / ratio) / 3,
 			im.width,
-			(im.height + im.width / ratio) / 2
+			(im.height + 2 * im.width / ratio) / 3
 		))
 
 def fetchImagesData(char, tags = "solo", count = 100, site = "safebooru"):
@@ -102,12 +103,26 @@ holes = [
 	[1151, 685, 157, 232],
 ]
 
-imgData = fetchImagesData("tatara_kogasa", count = 100)
-imgs = []
-while len(imgs) < len(holes):
-	temp = fetchImage(random.choice(imgData))
-	imgs.append(temp)
+def doItForHer(char, tags = "solo", imgDir = "."):
+	imgData = fetchImagesData(char, tags = tags, count = 100)
+	imgs = []
+	while len(imgs) < len(holes):
+		temp = fetchImage(random.choice(imgData))
+		imgs.append(temp)
 
-tmpl = Image.open("template.png")
-result = fillTemplate(holes, imgs, tmpl)
-result.show()
+	tmpl = Image.open("template.png")
+	result = fillTemplate(holes, imgs, tmpl)
+	result.show()
+
+	for filenum in range(1000):
+		path = imgDir + "/" + char + "_{:03d}".format(filenum) + ".png"
+		if not Path(path).is_file():
+			result.save(path)
+			break
+
+def main(argv):
+	print(type(argv))
+	print(len(argv))
+
+if __name__ == "__main__":
+    main(sys.argv)
