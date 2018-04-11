@@ -1,7 +1,11 @@
+#!/usr/bin/env python3
+
 import json
 import requests
 import random
+import sys
 from io import BytesIO
+from optparse import OptionParser
 from pathlib import Path
 from PIL import Image, ImageChops
 
@@ -28,7 +32,7 @@ def cutImage(im, width, height, resample = Image.BILINEAR):
 			(im.height + 2 * im.width / ratio) / 3
 		))
 
-def fetchImagesData(char, tags = "solo", count = 100, site = "safebooru"):
+def fetchImagesData(char, tags, count = 100, site = "safebooru"):
 	if tags != "":
 		tags = '+' + tags
 
@@ -121,8 +125,22 @@ def doItForHer(char, tags = "solo", imgDir = "."):
 			break
 
 def main(argv):
-	print(type(argv))
-	print(len(argv))
+	parser = OptionParser(usage = "usage: %prog [options] -c character")
+	parser.add_option("-c", "--character",
+		action = "store", type = "string",
+		help = "character to use in the collage (booru-style naming)")
+	parser.add_option("-d", "--directory",
+		action = "store", type = "string", default = ".",
+		help = "directory for image output (by default workdir)")
+	parser.add_option("-t", "--tags",
+		action = "store", type = "string", default = "solo",
+		help = "booru-style tags separated by '+' (by default solo)")
+	
+	(options, argv) = parser.parse_args()
+	if(options.character == None):
+		parser.error("provide a character name, see -h for help")
+	
+	doItForHer(options.character, tags = options.tags, imgDir = options.directory)
 
 if __name__ == "__main__":
-    main(sys.argv)
+	main(sys.argv)
