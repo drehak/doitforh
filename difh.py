@@ -82,6 +82,9 @@ def fillTemplate(holes, images, template, resample = Image.BILINEAR):
 	# sort both lists by w/h ratio (ascending)
 	holes.sort(key = lambda x: x[2] / x[3])
 	images.sort(key = lambda x: x.width / x.height)
+	# swap two images that don't overlap correctly
+	holes[2], holes[9] = holes[9], holes[2]
+	images[2], images[9] = images[9], images[2]
 	
 	for i in range(len(holes)):
 		x, y, w, h = holes[i]
@@ -92,7 +95,6 @@ def fillTemplate(holes, images, template, resample = Image.BILINEAR):
 
 	return template
 
-# demo
 holes = [
 	[12, 681, 163, 167],
 	[210, 433, 346, 246],
@@ -101,8 +103,8 @@ holes = [
 	[455, 226, 62, 68],
 	[483, 408, 217, 136],
 	[555, 547, 462, 441],
-	[895, 229, 230, 138],
-	[1068, 262, 284, 336],
+	[895, 229, 230, 138], # swapping; index after sorting: 9
+	[1068, 262, 284, 336], # swapping; index after sorting: 2
 	[1099, 10, 290, 188],
 	[1151, 685, 157, 232],
 ]
