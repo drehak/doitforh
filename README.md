@@ -19,8 +19,8 @@ This script steps up the game a level higher and automates the whole ordeal of d
 ## Dependencies
 
 * Python 3.x
-⋅⋅* requests
-⋅⋅* PIL
+  * requests
+  * PIL
 
 ## Invocation and options
 
