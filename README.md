@@ -24,8 +24,8 @@ This script steps up the game a level higher and automates the whole ordeal of d
 
 ## Invocation and options
 
-`./difh.py -c character_name` generates a collage, displays it and saves it in the working directory as **character_name_xyz.png**
-`./difh.py -h` shows additional options
+* `./difh.py -c character_name` generates a collage, displays it and saves it in the working directory as **character_name_xyz.png**
+* `./difh.py -h` shows additional options
 
 ### On character names
 
