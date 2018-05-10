@@ -24,4 +24,18 @@ This script steps up the game a level higher and automates the whole ordeal of d
 
 ## Invocation and options
 
-_to be done_
+`./difh.py -c character_name` generates a collage, displays it and saves it in the working directory as **character_name_xyz.png**
+`./difh.py -h` shows additional options
+
+### On character names
+
+Character tags on Danbooru and other similar aggregators follow a few specific conventions, such as:
+* all lowercase, words separated by underscores (example: `princess_zelda`)
+* in case of Japanese names, Asian name order is used (surname first) (`hakurei_reimu`)
+* in rare cases (mostly short names or ambiguity), franchise name may be required (`mercy_(overwatch)`)
+
+When in doubts or no images have been found, try searching among [Danbooru tags](https://danbooru.donmai.us/tags) - though be wary when clicking on the tags themselves, as content on Danbooru is unfiltered and not always safe for work.
+
+## Image sources
+
+Currently, all imagws are grabbed from [Safebooru](https://safebooru.org/), a very NSFW-filtered version of _Danbooru_. Switches for different aggregators are planned.
