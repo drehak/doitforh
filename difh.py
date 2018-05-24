@@ -55,10 +55,8 @@ def fetchImagesData(char, tags, count = 100, site = "safebooru"):
 		for attribute in ("width", "height"):
 			imgDict[attribute] = img[attribute]
 		imgDict["ratio"] = imgDict["width"] / imgDict["height"]
-		if site == "safebooru":
-			imgDict["url"] = "https://safebooru.org/images/" + img["directory"] + "/" + img["image"] + "?" + str(img["id"]);
-		elif site == "gelbooru":
-			imgDict["url"] = "https://gelbooru.org/images/" + img["directory"] + "/" + img["image"] + "?" + str(img["id"]);
+		if site == "safebooru" or "gelbooru":
+			imgDict["url"] = "https://" + site + ".org/images/" + img["directory"] + "/" + img["image"] + "?" + str(img["id"]);
 		imageData.append(imgDict)
 
 	return imageData
@@ -130,16 +128,16 @@ def main(argv):
 	parser = OptionParser(usage = "usage: %prog [options] -c character")
 	parser.add_option("-c", "--character",
 		action = "store", type = "string",
-		help = "character to use in the collage (booru-style naming)")
+		help = "character to use in the collage, see README for naming conventions")
 	parser.add_option("-d", "--directory",
 		action = "store", type = "string", default = ".",
-		help = "directory for image output (by default workdir)")
+		help = "directory for image output (working directory by default)")
 	parser.add_option("-t", "--tags",
 		action = "store", type = "string", default = "solo",
-		help = "booru-style tags separated by '+' (by default solo)")
+		help = "tags separated by '+' (by default solo), see readme")
 	
 	(options, argv) = parser.parse_args()
-	if(options.character == None):
+	if (options.character == None):
 		parser.error("provide a character name, see -h for help")
 	
 	doItForHer(options.character, tags = options.tags, imgDir = options.directory)

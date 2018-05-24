@@ -27,7 +27,7 @@ This script steps up the game a level higher and automates the whole ordeal of d
 * `./difh.py -c character_name` generates a collage, displays it and saves it in the working directory as **character_name_xyz.png**
 * `./difh.py -h` shows additional options
 
-### On character names
+### On character names and tags
 
 Character tags on Danbooru and other similar aggregators follow a few specific conventions, such as:
 * all lowercase, words separated by underscores (example: `princess_zelda`)
@@ -35,6 +35,8 @@ Character tags on Danbooru and other similar aggregators follow a few specific c
 * in rare cases (mostly short names or ambiguity), franchise name may be required (`mercy_(overwatch)`)
 
 When in doubts or no images have been found, try searching among [Danbooru tags](https://danbooru.donmai.us/tags) - though be wary when clicking on the tags themselves, as content on Danbooru is unfiltered and not always safe for work.
+
+You can specify additional tags in the `-t` option - note that this overrides the default `solo` tag. Separate tags by `+`. You can also blacklist tags by prefixing them with `-`. (example: `solo+smile+-blood`)
 
 ## Image sources
 
